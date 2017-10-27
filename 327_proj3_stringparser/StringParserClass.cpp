@@ -87,7 +87,8 @@ using namespace KP_StringParserClass;
 				return ERROR_DATA_NULL;
 			}
 
-			int sLen = strlen(pStartTag) + 1;
+			int sLen = strlen(pStartTag);
+			int eLen = strlen(pEndTag);
 
 			bool flag1 = true;
 			char *Itr1 = pDataToSearchThru;
@@ -95,9 +96,15 @@ using namespace KP_StringParserClass;
 			char *Itr2 = 0;
 
 			while (flag1) {
-				if (Itr1 == pStartTag) {
-					flag1 = false;
-					Itr1 = Itr1 + sLen;
+				if (*Itr1 == pStartTag[0]) {
+
+					if (strncmp(Itr1, pStartTag, sLen) == 0) {
+						flag1 = false;
+						Itr1 = Itr1 + sLen;
+					}
+					else {
+						Itr1++;
+					}
 				}
 				else {
 					Itr1++;
@@ -105,30 +112,38 @@ using namespace KP_StringParserClass;
 			}
 
 			Itr2 = Itr1;
-
 			bool flag2 = true;
+
+
 			while (flag2) {
-				if (Itr2 == pEndTag) {
-					flag2 = false;
+				if (*Itr2 == pEndTag[0]) {
+
+					if (strncmp(Itr2, pEndTag, eLen) == 0) {
+						flag2 = false;
+					}
+					else {
+						Itr2++;
+					}
+
 				}
 				else {
 					Itr2++;
 				}
 			}
 
+			std::string toVect = "";
 			while (Itr1 != Itr2) {
-				std::cout << *Itr1;
-				Itr1++;
+				if (*Itr1 == ' ') {
+					myVector.push_back(toVect);
+					toVect = "";
+				}
+				else {
+					toVect = toVect + *Itr1;
+					Itr1++;
+				}
+
 			}
-
-
-			//set pDataToSearchThru to pStartTag
-			//grab tokens and add each token (word) to myStrings???
-			//stop once pDataToSearchThru == pEndTag
-
-
-
-
+			myVector.push_back(toVect);
 			return SUCCESS;
 		}
 
