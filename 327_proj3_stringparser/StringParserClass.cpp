@@ -87,63 +87,79 @@ using namespace KP_StringParserClass;
 				return ERROR_DATA_NULL;
 			}
 
+
 			int sLen = strlen(pStartTag);
 			int eLen = strlen(pEndTag);
 
-			bool flag1 = true;
-			char *Itr1 = pDataToSearchThru;
+			while (pDataToSearchThru) {
 
-			char *Itr2 = 0;
 
-			while (flag1) {
-				if (*Itr1 == pStartTag[0]) {
+				bool flag1 = true;
 
-					if (strncmp(Itr1, pStartTag, sLen) == 0) {
+
+				char *Itr1 = pDataToSearchThru;
+
+				char *Itr2 = 0;
+
+				while (flag1) {
+					if (*Itr1 == pStartTag[0]) {
+
+						if (strncmp(Itr1, pStartTag, sLen) == 0) {
+							flag1 = false;
+							Itr1 = Itr1 + sLen;
+						}
+						else {
+							Itr1++;
+						}
+					}
+					else if (*Itr1 == '\0') {
 						flag1 = false;
-						Itr1 = Itr1 + sLen;
 					}
 					else {
 						Itr1++;
 					}
 				}
-				else {
-					Itr1++;
-				}
-			}
 
-			Itr2 = Itr1;
-			bool flag2 = true;
+				Itr2 = Itr1;
+				bool flag2 = true;
 
+				while (flag2) {
+					if (*Itr2 == pEndTag[0]) {
 
-			while (flag2) {
-				if (*Itr2 == pEndTag[0]) {
+						if (strncmp(Itr2, pEndTag, eLen) == 0) {
+							flag2 = false;
+						}
+						else {
+							Itr2++;
+						}
 
-					if (strncmp(Itr2, pEndTag, eLen) == 0) {
+					}
+					else if (*Itr2 == '\0') {
 						flag2 = false;
 					}
 					else {
 						Itr2++;
 					}
+				}
 
-				}
-				else {
-					Itr2++;
-				}
-			}
-
-			std::string toVect = "";
-			while (Itr1 != Itr2) {
-				if (*Itr1 == ' ') {
-					myVector.push_back(toVect);
-					toVect = "";
-				}
-				else {
+				std::string toVect = "";
+				while (Itr1 != Itr2) {
 					toVect = toVect + *Itr1;
+					Itr1++;
 				}
-				Itr1++;
-			}
+				if (toVect.length() > 0) {
+					myVector.push_back(toVect);
+					Itr1 = 0;
+					pDataToSearchThru = Itr2 + eLen;
+					Itr2 = 0;
+				}
+				else {
+					pDataToSearchThru = 0;
+				}
 
-			myVector.push_back(toVect);
+
+
+			}
 			return SUCCESS;
 		}
 
