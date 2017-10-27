@@ -41,7 +41,7 @@ using namespace KP_StringParserClass;
 			}
 
 			pStartTag = 0;
-			int startlen = strlen(pStart) +1;	//add 1 for the terminating \0
+			int startlen = strlen(pStart) +1;
 			pStartTag = new char [startlen];
 
 			if (pStart){
@@ -68,6 +68,42 @@ using namespace KP_StringParserClass;
 			return SUCCESS;
 		}
 
+
+		void StringParserClass::cleanup() {
+
+		}
+
+		//Searches a string starting at pStart for pTagToLookFor
+		//returns:
+		//SUCCESS  found pTagToLookFor, pStart points to beginning of tag and pEnd points to end of tag
+		//FAIL did not find pTagToLookFor and pEnd points to 0
+		//ERROR_TAGS_NULL if either pStart or pEnd is null
+		int StringParserClass::findTag(char *pTagToLookFor, char *&pStart, char *&pEnd) {
+
+			if (!pStart || !pEnd) {
+				return ERROR_TAGS_NULL;
+			}
+
+			const int looklen = strlen(pTagToLookFor);
+			const int slen = strlen(pStart);
+			//const int eLen = strlen(pEnd);
+
+			std::cout << slen;
+
+			for (int i = 0; i < slen; i++) {
+
+				if (*(pStart + i) == pTagToLookFor[0]) {
+					if (strncmp((pStart+i), pTagToLookFor, looklen) == 0) {
+						return SUCCESS;
+					}
+				}
+			}
+
+			pEnd = 0;
+			return FAIL;
+
+		}
+
 		//First clears myVector
 		//going to search thru pDataToSearchThru, looking for info bracketed by
 		//pStartTag and pEndTag, will add that data to myStrings
@@ -87,26 +123,45 @@ using namespace KP_StringParserClass;
 				return ERROR_DATA_NULL;
 			}
 
-
 			int sLen = strlen(pStartTag);
 			int eLen = strlen(pEndTag);
 
+//			char * duh = pStartTag + sLen;
+//			char * duh2 = pEndTag + eLen;
+
 			while (pDataToSearchThru) {
 
+//				int find1 = StringParserClass::findTag(pStartTag, pDataToSearchThru, duh);
+//				int find2 = StringParserClass::findTag(pEndTag, pDataToSearchThru, duh2);
 
+				//std::cout << "find1: " << find1 << std::endl;
+				//std::cout << "find2: " << find2 << std::endl;
+
+//				if (find1 == FAIL || find2 == FAIL) {
+//					return ERROR_TAGS_NULL;
+//				}
+//
+//				else if (find1 == ERROR_TAGS_NULL || find2 == ERROR_TAGS_NULL) {
+//					return ERROR_TAGS_NULL;
+//				}
+
+
+				//So I know I should implemented findTags and then call it here for both pStartTag & pEndTag
+				//but, this function encompasses (most) of the functionalliy of findTags below vvv
+				//couldn't figure out how to find when there is no end tag (I know, I should have done used findTags to catch this ocurance)
 				bool flag1 = true;
 
-
-				char *Itr1 = pDataToSearchThru;
-
+				char *Itr1 = pDataToSearchThru; //re
 				char *Itr2 = 0;
 
+				//moves pStartTag to the addr of first char of start tag
 				while (flag1) {
+
 					if (*Itr1 == pStartTag[0]) {
 
 						if (strncmp(Itr1, pStartTag, sLen) == 0) {
 							flag1 = false;
-							Itr1 = Itr1 + sLen;
+							Itr1 = Itr1 + sLen; //move pointer to last char of tag
 						}
 						else {
 							Itr1++;
@@ -123,7 +178,9 @@ using namespace KP_StringParserClass;
 				Itr2 = Itr1;
 				bool flag2 = true;
 
+				//moves pEndTag to the addr of first char of end tag
 				while (flag2) {
+
 					if (*Itr2 == pEndTag[0]) {
 
 						if (strncmp(Itr2, pEndTag, eLen) == 0) {
@@ -142,6 +199,8 @@ using namespace KP_StringParserClass;
 					}
 				}
 
+				//spit the chars between Itr1&2 to a std::string
+				//spit that std::string into vector
 				std::string toVect = "";
 				while (Itr1 != Itr2) {
 					toVect = toVect + *Itr1;
@@ -150,53 +209,14 @@ using namespace KP_StringParserClass;
 				if (toVect.length() > 0) {
 					myVector.push_back(toVect);
 					Itr1 = 0;
-					pDataToSearchThru = Itr2 + eLen;
+					pDataToSearchThru = Itr2 + eLen; //used to help break out of outer-most whileloop
 					Itr2 = 0;
 				}
 				else {
 					pDataToSearchThru = 0;
 				}
 
-
-
 			}
 			return SUCCESS;
 		}
 
-		void StringParserClass::cleanup() {
-
-		}
-
-		//Searches a string starting at pStart for pTagToLookFor
-		//returns:
-		//SUCCESS  found pTagToLookFor, pStart points to beginning of tag and pEnd points to end of tag
-		//FAIL did not find pTagToLookFor and pEnd points to 0
-		//ERROR_TAGS_NULL if either pStart or pEnd is null
-		int StringParserClass::findTag(char *pTagToLookFor, char *&pStart, char *&pEnd) {
-
-			int len = 0;
-			char pStartcpyPtr = *pStart;
-			char pEndcpyPtr = *pEnd;
-
-			while (pStartcpyPtr != pEndcpyPtr) {
-				len++;
-				pStartcpyPtr++;
-			}
-
-			for (int i = 0; i < len; i++) {
-
-				if (*(pStart + i) == pTagToLookFor[0]) {
-					if (strncmp((pStart + i), pTagToLookFor, 2) == 0) {
-						return SUCCESS;
-					}
-				}
-
-
-			}
-		}
-//			while (pStart != pEnd) {
-//				if (pStart[0] == pTagToLookFor[0]) {
-//					if (strncmp(pStart))
-//				}
-//				pStart++;
-//			}
