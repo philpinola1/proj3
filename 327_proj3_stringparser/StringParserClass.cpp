@@ -139,10 +139,10 @@ using namespace KP_StringParserClass;
 				}
 				else {
 					toVect = toVect + *Itr1;
-					Itr1++;
 				}
-
+				Itr1++;
 			}
+
 			myVector.push_back(toVect);
 			return SUCCESS;
 		}
