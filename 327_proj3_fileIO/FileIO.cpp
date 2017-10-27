@@ -19,21 +19,24 @@ using namespace std;
 	//COULD_NOT_OPEN_FILE_TO_READ contents string is cleared
 int KP_FileIO::getFileContents(const std::string &filename, std::string &contents) {
 
-	fstream infile;
-    infile.open(filename.c_str(), ios::in);
+	ifstream infile;
+    infile.open(filename.c_str());
 
 	if (infile.is_open()) {
 
-		while (!infile.eof()) {
-			char line [200];
-			char *p = line;
-			infile.getline(p, 200);
-			std::string str(line);
-			contents = contents + line;
+		while (infile.is_open()) {
+
+			while (!infile.eof()) {
+				char line [200];
+				char *p = line;
+				infile.getline(p, 200);
+				std::string str(line);
+				contents = contents + line;
+				}
+			infile.close();
+			return SUCCESS;
+			}
 		}
-		infile.close();
-		return SUCCESS;
-	}
 	else{
 		return COULD_NOT_OPEN_FILE_TO_READ;
 	}
@@ -48,8 +51,8 @@ int KP_FileIO::getFileContents(const std::string &filename, std::string &content
 
 int KP_FileIO::writeVectortoFile(const std::string filename,std::vector<std::string> &myEntryVector){
 
-	fstream outfile;
-	outfile.open(filename.c_str(), ios::out);
+	ofstream outfile;
+	outfile.open(filename.c_str());
 	vector<std::string>::iterator itr;
 
 	if (outfile.is_open()) {

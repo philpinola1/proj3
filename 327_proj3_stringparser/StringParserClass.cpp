@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <string.h>
+#include <iostream>
 
 #include "../327_proj3_test/includes/constants.h"
 #include "../327_proj3_test/includes/StringParserClass.h"
@@ -39,13 +40,31 @@ using namespace KP_StringParserClass;
 				return ERROR_TAGS_NULL;
 			}
 
-			char pStarttmpPtr = *pStart;
-			char pEndtmpPtr = *pEnd;
+			pStartTag = 0;
+			int startlen = strlen(pStart) +1;	//add 1 for the terminating \0
+			pStartTag = new char [startlen];
 
-			pStartTag = &pStarttmpPtr;
-			pEndTag = &pEndtmpPtr;
+			if (pStart){
+				memset( pStartTag, 0, (startlen)* sizeof(char));
+				strncpy(pStartTag, pStart, startlen);
+			}
+			else {
+				return ERROR_TAGS_NULL;
+			}
+
+			pEndTag = 0;
+			int endlen = strlen(pEnd) + 1;
+			pEndTag = new char [endlen];
+
+			if (pEnd){
+				memset (pEndTag, 0, (endlen)* sizeof(char));
+				strncpy(pEndTag, pEnd, endlen);
+			}
+			else {
+				return ERROR_TAGS_NULL;
+			}
+
 			areTagsSet = true;
-
 			return SUCCESS;
 		}
 
@@ -67,6 +86,41 @@ using namespace KP_StringParserClass;
 			if (!pDataToSearchThru) {
 				return ERROR_DATA_NULL;
 			}
+
+			int sLen = strlen(pStartTag) + 1;
+
+			bool flag1 = true;
+			char *Itr1 = pDataToSearchThru;
+
+			char *Itr2 = 0;
+
+			while (flag1) {
+				if (Itr1 == pStartTag) {
+					flag1 = false;
+					Itr1 = Itr1 + sLen;
+				}
+				else {
+					Itr1++;
+				}
+			}
+
+			Itr2 = Itr1;
+
+			bool flag2 = true;
+			while (flag2) {
+				if (Itr2 == pEndTag) {
+					flag2 = false;
+				}
+				else {
+					Itr2++;
+				}
+			}
+
+			while (Itr1 != Itr2) {
+				std::cout << *Itr1;
+				Itr1++;
+			}
+
 
 			//set pDataToSearchThru to pStartTag
 			//grab tokens and add each token (word) to myStrings???
@@ -108,15 +162,10 @@ using namespace KP_StringParserClass;
 
 
 			}
+		}
 //			while (pStart != pEnd) {
 //				if (pStart[0] == pTagToLookFor[0]) {
 //					if (strncmp(pStart))
 //				}
 //				pStart++;
 //			}
-
-
-
-
-			return SUCCESS;
-		}

@@ -41,8 +41,8 @@ endif
 all: 327_proj3_test
 
 dependents:
-	-cd /home/bdb/workspace/proj3/327_proj3_fileIO/Debug && $(MAKE) clean all
-	-cd /home/bdb/workspace/proj3/327_proj3_stringparser/Debug && $(MAKE) clean all
+	-cd /home/bdb/workspace/proj3/327_proj3_fileIO/Debug && $(MAKE) all
+	-cd /home/bdb/workspace/proj3/327_proj3_stringparser/Debug && $(MAKE) all
 
 # Tool invocations
 327_proj3_test: $(OBJS) $(USER_OBJS) /home/bdb/workspace/proj3/327_proj3_fileIO/Debug/lib327_proj3_fileIO.a /home/bdb/workspace/proj3/327_proj3_stringparser/Debug/lib327_proj3_stringparser.a
